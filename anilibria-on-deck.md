@@ -45,13 +45,22 @@ sudo apt install ubuntu-restricted-extras
 ```bash
 sudo apt install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
 ```
+Для того чтобы приложение могло открывать браузер необходимо выполнить следующую команду:
 
+```bash
+sudo ln -s /usr/bin/distrobox-host-exec /usr/local/bin/xdg-open
+```
 Затем надо проверить работоспособность приложения не покидая гостевой системы. Для этого необходимо выполнить в терминале следующую команду:
 ```bash
 /opt/AniLibria/bin/AniLibria
 ```
-Сейчас достаточно чтобы приложение запустилось и показало каталог. Воспроизведение видео может не работать и падать с ошибкой ` Segmentation fault (core dumped) `. Для нормальной работы необходимо поменять плеер по умолчанию. Внутри приложения это сделать не получится. Необходимо отредактировать файл ` ~/.local/share/EmptyFlow/AnilibriaDesktopClient/userconfiguration.cache ` изменив значение ` 
- "lastSelectedPlayer" ` с ` "Default" ` на ` "mpv" `. В итоге строка должна получить такой вид:
+Сейчас достаточно чтобы приложение запустилось и показало каталог. Желательно сразу проверить интеграцию с браузером. Откройте в каталоге любой релиз и нажмите на кнопку ` "Открыть на сайте" `. В терминале, который остался на фоне, может появиться вопрос:
+```
+Warning: host-spawn not found or version is too old!
+Do you want to install host-spawn utility? [Y/n]
+```
+Согласитесь на установку утилиты: нажмите ` "Y" `, а затем ` "Enter" `. После этого из программы должны спокойно открываться веб-страницы и torrent-файлы. 
+А воспроизведение видео сейчас может не работать и падать с ошибкой ` Segmentation fault (core dumped) `. Для нормальной работы необходимо поменять плеер по умолчанию. Внутри приложения это сделать не получится, его можно уже закрыть. Необходимо отредактировать файл ` ~/.local/share/EmptyFlow/AnilibriaDesktopClient/userconfiguration.cache ` изменив значение ` "lastSelectedPlayer" ` с ` "Default" ` на ` "mpv" `. В итоге строка должна получить такой вид:
 ```
 "lastSelectedPlayer": "mpv",
 ```
