@@ -4,98 +4,94 @@
 
 **Внимание! Если найдете ошибки в командах или будут предложения по улучшению то создавайте ишью!**
 
-Данное руководство рассчитано на подготовленого пользователя консоли, который знаком с режимом рабочего стола. Базовые вещи описаны на [портале поддержки Steam](https://help.steampowered.com/ru/faqs/view/671A-4453-E8D2-323C). Убедитесь, что на консоли установлена последняя версия SteamOS. На момент написания статьи актуальной была версия 3.5.19. Так же необходимо иметь базовые представления об терминале Linux.
+Данное руководство рассчитано на подготовленого пользователя консоли, который знаком с режимом рабочего стола. Базовые вещи описаны на [портале поддержки Steam](https://help.steampowered.com/ru/faqs/view/671A-4453-E8D2-323C). Убедитесь, что на консоли установлена последняя версия SteamOS. На момент написания статьи актуальной была версия 3.8.16. Так же необходимо иметь базовые представления об терминале Linux.
 
 **Внимание! Все манипуляции проводятся в режиме рабочего стола**
 
-**Этап 1. Подготовка DistroBox**
+*Этап 1. Подготовка DistroBox*
 
-Начиная с версии SteamOS 3.5 DistroBox включен в состав системы. Необходимо только добавить возможность работы программ с графическим интерфесом. Для этого в файле ` ~/.distroboxrc ` добавить следующую строку:
+Начиная с версии SteamOS 3.5 DistroBox включен в состав системы. Необходимо только добавить возможность работы программ с графическим интерфесом. Для этого в файле ~/.distroboxrc добавить следующую строку:
 
-```
 xhost +si:localuser:$USER >/dev/null
-```
 
-**Этап 2. Установка Ubuntu в DistroBox**
+*Этап 2. Установка Ubuntu в DistroBox*
 
 Далее команды выполняются в терминале
 
-```bash
-distrobox create --image docker.io/library/ubuntu:22.04 ubuntu
-```
+distrobox create --image docker.io/library/ubuntu:26.04 ubuntu
 
-**Этап 3. Переход в Ubuntu**
+*Этап 3. Переход в Ubuntu*
 
 После команды
-```bash
+
 distrobox enter ubuntu
-```
-все дальнейшие команды выполняются внутри гостевой Ubuntu. Это можно сравнить с виртуальной машиной, но многие ресурсы используются совместно с хостом. В частности общая домашняя папка пользователя.
-Первый запуск займет некоторое время. Признаком того, что мы находимся внутри гостевой системы является промпт ` deck@ubuntu:~$ `
 
-**Этап 4. Установка приложения из исходников**
+*Этап 4. Внутренняя установка*
 
-Воспользуйтесь [инструкцией](https://github.com/anilibria/anilibria-winmaclinux/blob/master/linuxmint20.md) для сборки. **Обязательно собирайте с поддержкой  mpv.**
-После окончания сборки и установки командой ` sudo make install ` необходимо установить дополнительные кодеки:
-```bash
+Устанавливаем зависимости необходимые для сборки
+
+sudo apt install git build-essential git libmpv-dev pkg-config cmake qt6-base-dev qt6-declarative-dev qt6-websockets-dev qt6-svg-dev libxkbcommon-dev qml6-module-*
+
+
+*Этап 5. Установка приложения из исходников*
+
+Воспользуйтесь инструкцией для сборки. Обязательно собирайте с поддержкой mpv, также необходимо установить дополнительные кодеки:
+
 sudo apt install ubuntu-restricted-extras
-```
+
 Если хотите добиться работы стандартного плеера, то необходимо установить ещё несколько пакетов:
 
-```bash
 sudo apt install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-bad1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-tools gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
-```
+
 Для того чтобы приложение могло открывать браузер необходимо выполнить следующую команду:
 
-```bash
 sudo ln -s /usr/bin/distrobox-host-exec /usr/local/bin/xdg-open
-```
-Затем надо проверить работоспособность приложения не покидая гостевой системы. Для этого необходимо выполнить в терминале следующую команду:
-```bash
-/opt/AniLibria/bin/AniLibria
-```
-Сейчас достаточно чтобы приложение запустилось и показало каталог. Желательно сразу проверить интеграцию с браузером. Откройте в каталоге любой релиз и нажмите на кнопку ` "Открыть на сайте" `. В терминале, который остался на фоне, может появиться вопрос:
-```
-Warning: host-spawn not found or version is too old!
-Do you want to install host-spawn utility? [Y/n]
-```
-Согласитесь на установку утилиты: нажмите ` "Y" `, а затем ` "Enter" `. После этого из программы должны спокойно открываться веб-страницы и torrent-файлы. 
-А воспроизведение видео сейчас может не работать и падать с ошибкой ` Segmentation fault (core dumped) `. Для нормальной работы необходимо поменять плеер по умолчанию. Внутри приложения это сделать не получится, его можно уже закрыть. Необходимо отредактировать файл ` ~/.local/share/EmptyFlow/AnilibriaDesktopClient/userconfiguration.cache ` изменив значение ` "lastSelectedPlayer" ` с ` "Default" ` на ` "mpv" `. В итоге строка должна получить такой вид:
-```
-"lastSelectedPlayer": "mpv",
-```
-*Примечание. Данный файл можно открыть из SteamOS, а не пользоваться консольными редакторами*
 
-**Этап 5. Экспорт приложения в основную систему**
+*Этап 6. Создаем папку для проекта, переходим в нее и извлекаем исходники (предполагается что Вы находитесь в домашней папке)*
 
-Находясь внутри терминала гостевой системы (убедитесь, что промпт выглядит как ` deck@ubuntu:~$ `) необходимо выполнить команду
-```bash
-distrobox-export --app /opt/AniLibria/bin/AniLibria
-```
+mkdir anilibria
+cd anilibria/
+git clone https://github.com/anilibria/anilibria-winmaclinux.git
+cd anilibria-winmaclinux/src/
+
+*Этап 7. Выполняем сборку и установку Подготовка сборки:*
+cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/opt/AniLibria
+cmake --build build
+sudo cmake --install build
+
+*Затем надо проверить работоспособность приложения не покидая гостевой системы. Для этого необходимо выполнить в терминале следующую команду:*
+
+/opt/AniLibria/bin/AniLiberty
+
+*Этап 8. Экспорт приложения:*
+distrobox-export --app /opt/AniLibria/bin/AniLiberty
+
+*Этап 9. Создаем ярлык на рабочий стол (в пуск так называймый)*
+
+Экспорт иконки
+
+mkdir -p ~/.local/share/icons
+distrobox-enter ubuntu -- cat /opt/AniLibria/share/icons/hicolor/256x256/apps/aniliberty.png > ~/.local/share/icons/aniliberty.png
+
+После этого создание .desktop файла:
+
+nano ~/.local/share/applications/AniLiberty.desktop
+
+Суть файла
+
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=AniLiberty
+Comment=AniLiberty
+Exec=distrobox-enter ubuntu -- /opt/AniLibria/bin/AniLiberty
+Icon=/home/deck/.local/share/icons/aniliberty.png
+Terminal=false
+Categories=AudioVideo;Video;
+StartupNotify=true
+
+*Этап 10. Концовка*
+
 Теперь можно спокойно выйти из гостевой системы командой
-```bash
+
 exit
-```
-И закрыть окно терминала
-
-**Этап 6. Установка TorrentStream (необязательно)**
-
-Для улучшения качества доставки контента рекомендуется TorrentStream установить по [инструкции](https://github.com/anilibria/anilibria-winmaclinux/blob/master/torrentstream.md). Имейте ввиду, что папка с этим приложением должна находится в домашней директории пользователя. В приложении AniLibria необходимо указывать полный путь относительно корня, например такой: */home/deck/Soft/TorrentStream/torrentStream*
-
-**Этап 7. Добавление приложения в Gaming mode (необязательно)**
-
-Добавление и настройка описаны в отдельном [руководстве](anilibria-on-deck_gaming-mode.md)
-
-### Как найти приложение?
-Приложение будет доступно из раздела меню ` Мультимедиа ` по имени  ` AniLibria (on ubuntu) `.
-
-### Как обновить приложение?
-Для того чтобы обновить приложение необходимо в терминале войти в гостевую систему:
-```bash
-distrobox enter ubuntu
-```
-И действовать по [инструкции](https://github.com/anilibria/anilibria-winmaclinux/blob/master/linuxmint20.md#%D0%BA%D0%B0%D0%BA-%D0%BE%D0%B1%D0%BD%D0%BE%D0%B2%D0%B8%D1%82%D1%8C-%D0%BF%D1%80%D0%B8%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5). После окончания сборки и установки командой ` sudo make install ` можно выйти из гостевой системы командой
-```bash
-exit
-```
-Больше никаких действий производить не надо.
