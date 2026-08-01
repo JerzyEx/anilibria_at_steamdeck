@@ -39,7 +39,6 @@ distrobox enter ubuntu
 
 ```markdown
 sudo apt install git build-essential git libmpv-dev pkg-config cmake qt6-base-dev qt6-declarative-dev qt6-websockets-dev qt6-svg-dev libxkbcommon-dev qml6-module-*
-
 ```
 
 **Этап 5. Установка приложения из исходников**
