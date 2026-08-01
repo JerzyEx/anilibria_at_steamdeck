@@ -8,9 +8,11 @@
 
 **Внимание! Все манипуляции проводятся в режиме рабочего стола**
 
-*Этап 1. Подготовка DistroBox*
+**Этап 1. Подготовка DistroBox**
 
 Начиная с версии SteamOS 3.5 DistroBox включен в состав системы. Необходимо только добавить возможность работы программ с графическим интерфесом. Для этого в файле ~/.distroboxrc добавить следующую строку:
+
+nano ~/.distroboxrc
 
 xhost +si:localuser:$USER >/dev/null
 
@@ -20,7 +22,7 @@ xhost +si:localuser:$USER >/dev/null
 
 distrobox create --image docker.io/library/ubuntu:26.04 ubuntu
 
-*Этап 3. Переход в Ubuntu*
+**Этап 3. Переход в Ubuntu**
 
 После команды
 
@@ -33,7 +35,7 @@ distrobox enter ubuntu
 sudo apt install git build-essential git libmpv-dev pkg-config cmake qt6-base-dev qt6-declarative-dev qt6-websockets-dev qt6-svg-dev libxkbcommon-dev qml6-module-*
 
 
-*Этап 5. Установка приложения из исходников*
+**Этап 5. Установка приложения из исходников**
 
 Воспользуйтесь инструкцией для сборки. Обязательно собирайте с поддержкой mpv, также необходимо установить дополнительные кодеки:
 
@@ -47,7 +49,7 @@ sudo apt install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstream
 
 sudo ln -s /usr/bin/distrobox-host-exec /usr/local/bin/xdg-open
 
-*Этап 6. Создаем папку для проекта, переходим в нее и извлекаем исходники (предполагается что Вы находитесь в домашней папке)*
+**Этап 6. Создаем папку для проекта, переходим в нее и извлекаем исходники (предполагается что Вы находитесь в домашней папке)**
 
 mkdir anilibria
 cd anilibria/
@@ -59,14 +61,14 @@ cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/opt/AniLibria
 cmake --build build
 sudo cmake --install build
 
-*Затем надо проверить работоспособность приложения не покидая гостевой системы. Для этого необходимо выполнить в терминале следующую команду:*
+**Затем надо проверить работоспособность приложения не покидая гостевой системы. Для этого необходимо выполнить в терминале следующую команду:**
 
 /opt/AniLibria/bin/AniLiberty
 
 *Этап 8. Экспорт приложения:*
 distrobox-export --app /opt/AniLibria/bin/AniLiberty
 
-*Этап 9. Создаем ярлык на рабочий стол (в пуск так называймый)*
+**Этап 9. Создаем ярлык на рабочий стол (в пуск так называймый)**
 
 Экспорт иконки
 
@@ -90,7 +92,7 @@ Terminal=false
 Categories=AudioVideo;Video;
 StartupNotify=true
 
-*Этап 10. Концовка*
+**Этап 10. Концовка**
 
 Теперь можно спокойно выйти из гостевой системы командой
 
